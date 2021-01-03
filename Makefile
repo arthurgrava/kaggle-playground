@@ -11,5 +11,8 @@ clean:
 	@find . -name "*.egg-info" | xargs rm -rf
 	@find . -name "build" | xargs rm -rf
 
-start-jupyter: clean
-	screen -d -m jupyter-lab
+start-jupyter: clean stop-jupyter
+	screen -dmS notebook jupyter-lab
+
+stop-jupyter: clean
+	./stop-screen.sh
