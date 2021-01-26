@@ -2,7 +2,7 @@ from typing import Any, List, Tuple
 
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
 
 
 def random_split_on_data(data: pd.DataFrame, train_size: float = 0.8) -> Tuple[pd.DataFrame, pd.DataFrame]:
@@ -34,6 +34,13 @@ def fit_categorical_encoder(data: pd.DataFrame, column: str) -> OneHotEncoder:
     return encoder
 
 
+def fit_encoder_or_scaler(data: pd.DataFrame, column: str, Encoder: Any) -> Any:
+    """
+    Fit any `Encoder` to a `column` from the `data` and return the fitted encoder / scaler
+    """
+    return Encoder().fit(data[[column]])
+
+
 def transform_with_fitted_encoder(data: pd.DataFrame, column: str, encoder: OneHotEncoder) -> pd.DataFrame:
     temporary = pd.DataFrame(
         encoder.transform(data[[column]]).toarray(),
@@ -42,3 +49,12 @@ def transform_with_fitted_encoder(data: pd.DataFrame, column: str, encoder: OneH
     ctn = pd.concat([data, temporary], axis=1)
     del ctn[column]
     return ctn
+
+
+def apply_max_min_normalization(data: pd.DataFrame, column: str, scaler: MinMaxScaler) -> pd.DataFrame:
+    """
+    Apply a max min normalization to the columns using MinMaxScaler from sklearn, it updated the
+    dataframe and returns it.
+    """
+    data[column] = scaler.transform(data[[column]])
+    return data

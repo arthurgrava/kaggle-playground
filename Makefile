@@ -11,6 +11,9 @@ clean:
 	@find . -name "*.egg-info" | xargs rm -rf
 	@find . -name "build" | xargs rm -rf
 
+install:
+	pip install -r requirements.txt
+
 start-jupyter: clean stop-jupyter
 	screen -dmS notebook jupyter-lab
 
